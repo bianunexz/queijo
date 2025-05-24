@@ -49,9 +49,9 @@ label, .stTextInput > label, .stTextInput label {
 }
 </style>
 """, unsafe_allow_html=True)
-# Acima: Todo esse bloco serve para mudar as cores, o fundo, as caixas e o botão do seu site!
+# Todo esse bloco serve para mudar as cores, o fundo, as caixas e o botão do site
 
-# --- Banner com a logo do Instagram e título ---
+# Banner com a logo do Instagram e título
 st.markdown(
     f"""
     <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
@@ -61,37 +61,36 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# Acima: Mostra a logo do Instagram do lado do título, centralizados no topo do site
 
-# --- Subtítulo e explicação centralizados ---
+
+# Subtítulo e explicação centralizados
 st.markdown("""
 <div style="text-align:center; color:#e0e0e0; font-size:18px; margin-bottom:32px;">
 Responda as perguntas e receba sugestões incríveis para sua bio no Instagram, LinkedIn e mais!
 </div>
 """, unsafe_allow_html=True)
-# Acima: Um texto explicando o que o site faz, centralizado
 
-# --- Perguntas para o usuário preencher ---
+
+# Perguntas para o usuário preencher 
 nome = st.text_input("Seu nome (opcional):")  # Campo para digitar o nome (opcional)
 profissao = st.text_input("Profissão ou área de atuação:")  # Campo da profissão
 hobbies = st.text_input("Hobbies ou paixões:")  # Campo dos hobbies
 frase = st.text_input("Uma frase favorita ou lema (opcional):")  # Campo para frase inspiradora (opcional)
 adjetivo = st.text_input("Como você se define em uma palavra? (ex: criativo, dedicado)")  # Campo para um adjetivo
 
-# --- Escolha da rede social desejada ---
+# Escolha da rede social desejada
 rede = st.selectbox(
     "Para qual rede social você quer a bio?",
     ["Instagram", "LinkedIn", "Twitter/X", "TikTok", "Outra"]
 )
-# Acima: Menu para escolher para qual rede social você quer a bio
 
-# --- Botão para gerar as bios ---
+# Botão para gerar as bios
 if st.button("✨ Gerar Bios!"):
     bios = []  # Lista onde vão ficar as sugestões de bios
 
     # Monta as frases de acordo com a rede social escolhida
     if rede == "Instagram":
-        bios.append(f"{adjetivo.capitalize()} | {profissao} | {hobbies}\n✨ {frase}" if frase else f"{adjetivo.capitalize()} | {profissao} | {hobbies}")
+        bios.append(f"{adjetivo.capitalize()} | {profissao} | {hobbies}\n {frase}" if frase else f"{adjetivo.capitalize()} | {profissao} | {hobbies}")
         bios.append(f"{profissao} apaixonado(a) por {hobbies}\n{frase}" if frase else f"{profissao} apaixonado(a) por {hobbies}")
         bios.append(f"{nome} • {profissao}\n{hobbies}\n\"{frase}\"" if nome and frase else f"{profissao} • {hobbies}")
     elif rede == "LinkedIn":
@@ -102,12 +101,11 @@ if st.button("✨ Gerar Bios!"):
         bios.append(f"{adjetivo.capitalize()} em {profissao} • {hobbies}\n{frase}" if frase else f"{adjetivo.capitalize()} em {profissao} • {hobbies}")
         bios.append(f"{profissao} | {hobbies}\n{frase}" if frase else f"{profissao} | {hobbies}")
     elif rede == "TikTok":
-        bios.append(f"{profissao} que ama {hobbies} 💡\n{frase}" if frase else f"{profissao} que ama {hobbies} 💡")
-        bios.append(f"Conteúdo: {profissao} & {hobbies}\nSiga para mais! 🚀")
+        bios.append(f"{profissao} que ama {hobbies} \n{frase}" if frase else f"{profissao} que ama {hobbies} ")
+        bios.append(f"Conteúdo: {profissao} & {hobbies}\nSiga para mais! ")
     else:
         bios.append(f"{adjetivo.capitalize()} {profissao} • {hobbies}\n{frase}" if frase else f"{adjetivo.capitalize()} {profissao} • {hobbies}")
-    # Acima: Cada bloco monta frases diferentes dependendo da rede social escolhida
-
+  
     st.subheader("Suas bios criativas:")  # Título antes das bios
 
     # Mostra todas as bios geradas em caixas de código para copiar fácil
@@ -118,7 +116,7 @@ if st.button("✨ Gerar Bios!"):
 st.markdown("""
 ---
 <div style="text-align:center">
-    <span style="color:#b8b8ff">Feito com ❤️ no Streamlit</span>
+    <span style="color:#b8b8ff">@bia.nunexz</span>
 </div>
 """, unsafe_allow_html=True)
-# Acima: Um rodapé fofo!
+
