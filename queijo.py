@@ -4,29 +4,44 @@ import random
 # ---------- Personalização via CSS ----------
 st.markdown("""
 <style>
-body {
-    background-color: #1a1a2e;
-}
+/* Fundo geral */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(120deg, #232526 0%, #1a1a2e 100%);
 }
-h1, h2, h3, h4, h5, h6 {
+/* Título principal em branco */
+h1, .main h1 {
+    color: #fff !important;
+    font-size: 3.5rem !important;
+}
+/* Subtítulos (labels) em uma linha só e cor clara */
+label, .stTextInput > label, .stTextInput label {
     color: #ffe066 !important;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
-.stTextInput>div>div>input {
-    background-color: #23243a;
-    color: #fff;
+/* Caixas de resposta em roxo escuro */
+.stTextInput > div > div > input {
+    background-color: #3f2169 !important;
+    color: #fff !important;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.1rem;
 }
+/* Botão estilizado */
 .stButton>button {
     background-color: #ffe066;
     color: #232526;
     border-radius: 25px;
     font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 10px;
 }
 .stButton>button:hover {
     background-color: #ffbe0b;
     color: #232526;
 }
+/* Caixas de código */
 .stCodeBlock {
     background: #fffbe6;
     color: #232526;
@@ -35,12 +50,12 @@ h1, h2, h3, h4, h5, h6 {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- Banner com imagem ----------
+# ---------- Banner com logo do Instagram ----------
 st.markdown(
     f"""
-    <div style="display: flex; align-items: center; justify-content: center;">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Ícone de bio" width="80" style="margin-right: 20px;">
-        <h1 style="color: #ffe066;">Gerador de Bio Criativa 🌟</h1>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Logo Instagram" width="70" style="margin-right: 20px;">
+        <h1 style="color: #fff; margin-bottom: 0;">Gerador de Bio Criativa</h1>
     </div>
     """,
     unsafe_allow_html=True
@@ -93,4 +108,3 @@ st.markdown("""
     <span style="color:#ffe066">Feito com ❤️ no Streamlit</span>
 </div>
 """, unsafe_allow_html=True)
-
