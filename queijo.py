@@ -1,56 +1,57 @@
-import streamlit as st
-import random
+import streamlit as st  # Importa o Streamlit, que serve para criar o site de forma fácil e interativa
+import random           # Importa o random, que serve para escolher uma bio aleatória das opções
 
-# ---------- Personalização via CSS ----------
+# --- CSS para personalizar o visual do site ---
 st.markdown("""
 <style>
-/* Fundo geral */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(120deg, #232526 0%, #1a1a2e 100%);
 }
-/* Título principal em branco */
+/* Título principal */
 h1, .main h1 {
-    color: #fff !important;
+    color: #fff !important; /* Branco */
     font-size: 3.5rem !important;
 }
-/* Subtítulos (labels) em uma linha só e cor clara */
+/* Labels dos campos (as perguntas) */
 label, .stTextInput > label, .stTextInput label {
-    color: #ffe066 !important;
-    white-space: nowrap;
+    color: #fff !important;
+    white-space: nowrap; /* Deixa tudo em uma linha só */
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.08rem;
 }
-/* Caixas de resposta em roxo escuro */
+/* Caixas de texto (onde digita as respostas) com roxo escuro */
 .stTextInput > div > div > input {
-    background-color: #3f2169 !important;
+    background-color: #432c66 !important;
     color: #fff !important;
     border-radius: 10px;
     border: none;
-    font-size: 1.1rem;
+    font-size: 1.08rem;
 }
-/* Botão estilizado */
+/* Botão em roxo claro */
 .stButton>button {
-    background-color: #ffe066;
-    color: #232526;
+    background-color: #7d5fff;
+    color: #fff;
     border-radius: 25px;
     font-weight: bold;
     font-size: 1.1rem;
     margin-top: 10px;
+    border: none;
 }
 .stButton>button:hover {
-    background-color: #ffbe0b;
-    color: #232526;
+    background-color: #a685e2;
+    color: #fff;
 }
-/* Caixas de código */
+/* Caixa do código da bio gerada */
 .stCodeBlock {
-    background: #fffbe6;
-    color: #232526;
+    background: #282c34;
+    color: #fff;
     border-radius: 12px;
 }
 </style>
 """, unsafe_allow_html=True)
+# Acima: Todo esse bloco serve para mudar as cores, o fundo, as caixas e o botão do seu site!
 
-# ---------- Banner com logo do Instagram ----------
+# --- Banner com a logo do Instagram e título ---
 st.markdown(
     f"""
     <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
@@ -60,27 +61,35 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+# Acima: Mostra a logo do Instagram do lado do título, centralizados no topo do site
 
+# --- Subtítulo e explicação centralizados ---
 st.markdown("""
-<div style="text-align:center; color:#eee; font-size:18px; margin-bottom:32px;">
+<div style="text-align:center; color:#e0e0e0; font-size:18px; margin-bottom:32px;">
 Responda as perguntas e receba sugestões incríveis para sua bio no Instagram, LinkedIn e mais!
 </div>
 """, unsafe_allow_html=True)
+# Acima: Um texto explicando o que o site faz, centralizado
 
-# ---------- Perguntas ----------
-nome = st.text_input("Seu nome (opcional):")
-profissao = st.text_input("Profissão ou área de atuação:")
-hobbies = st.text_input("Hobbies ou paixões:")
-frase = st.text_input("Uma frase favorita ou lema (opcional):")
-adjetivo = st.text_input("Como você se define em uma palavra? (ex: criativo, dedicado)")
+# --- Perguntas para o usuário preencher ---
+nome = st.text_input("Seu nome (opcional):")  # Campo para digitar o nome (opcional)
+profissao = st.text_input("Profissão ou área de atuação:")  # Campo da profissão
+hobbies = st.text_input("Hobbies ou paixões:")  # Campo dos hobbies
+frase = st.text_input("Uma frase favorita ou lema (opcional):")  # Campo para frase inspiradora (opcional)
+adjetivo = st.text_input("Como você se define em uma palavra? (ex: criativo, dedicado)")  # Campo para um adjetivo
 
+# --- Escolha da rede social desejada ---
 rede = st.selectbox(
     "Para qual rede social você quer a bio?",
     ["Instagram", "LinkedIn", "Twitter/X", "TikTok", "Outra"]
 )
+# Acima: Menu para escolher para qual rede social você quer a bio
 
+# --- Botão para gerar as bios ---
 if st.button("✨ Gerar Bios!"):
-    bios = []
+    bios = []  # Lista onde vão ficar as sugestões de bios
+
+    # Monta as frases de acordo com a rede social escolhida
     if rede == "Instagram":
         bios.append(f"{adjetivo.capitalize()} | {profissao} | {hobbies}\n✨ {frase}" if frase else f"{adjetivo.capitalize()} | {profissao} | {hobbies}")
         bios.append(f"{profissao} apaixonado(a) por {hobbies}\n{frase}" if frase else f"{profissao} apaixonado(a) por {hobbies}")
@@ -97,14 +106,19 @@ if st.button("✨ Gerar Bios!"):
         bios.append(f"Conteúdo: {profissao} & {hobbies}\nSiga para mais! 🚀")
     else:
         bios.append(f"{adjetivo.capitalize()} {profissao} • {hobbies}\n{frase}" if frase else f"{adjetivo.capitalize()} {profissao} • {hobbies}")
+    # Acima: Cada bloco monta frases diferentes dependendo da rede social escolhida
 
-    st.subheader("Suas bios criativas:")
+    st.subheader("Suas bios criativas:")  # Título antes das bios
+
+    # Mostra todas as bios geradas em caixas de código para copiar fácil
     for bio in bios:
         st.code(bio, language="markdown")
 
+# --- Rodapé ---
 st.markdown("""
 ---
 <div style="text-align:center">
-    <span style="color:#ffe066">Feito com ❤️ no Streamlit</span>
+    <span style="color:#b8b8ff">Feito com ❤️ no Streamlit</span>
 </div>
 """, unsafe_allow_html=True)
+# Acima: Um rodapé fofo!
