@@ -1,77 +1,58 @@
 import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
-import os
+import requests
+from io import BytesIO
 
-# Configuração da página
-st.set_page_config(page_title="Gerador de Memes", page_icon="😂")
+# Configuração básica
+st.title(" Gerador de Memes Simples")
+st.write("Crie memes rapidamente sem precisar de APIs!")
 
-# Título
-st.title("📸 Gerador de Memes para Comunicação Digital")
-st.write("Crie memes rapidamente para suas campanhas!")
-
-# Sidebar com instruções
-with st.sidebar:
-    st.header("Como usar:")
-    st.write("1. Escolha uma imagem base")
-    st.write("2. Digite o texto do meme")
-    st.write("3. Ajuste a posição e cor")
-    st.write("4. Baixe seu meme pronto!")
-    st.markdown("---")
-    st.caption("Feito com ❤️ para impressionar o professor")
-
-# Imagens de exemplo (embutidas no código)
+# Imagens online de exemplo (sem precisar baixar)
 imagens = {
-    "Gato Surpreso": "cat.jpg",
-    "Criança Feliz": "kid.jpg",
-    "Dog Filosofo": "dog.jpg"
+    "Gato": "https://raw.githubusercontent.com/username/repo/main/cat.jpg",
+    "Criança": "https://raw.githubusercontent.com/username/repo/main/kid.jpg",
+    "Cachorro": "https://raw.githubusercontent.com/username/repo/main/dog.jpg"
 }
 
-# Seleção de imagem
-opcao = st.selectbox("Escolha uma imagem base:", list(imagens.keys()))
+# Seleciona imagem
+opcao = st.selectbox("Escolha a imagem:", list(imagens.keys()))
 
-# Texto do meme
-texto_superior = st.text_input("Texto superior:", "QUANDO O PROFESSOR")
-texto_inferior = st.text_input("Texto inferior:", "PEDE UM PROJETO INCRÍVEL")
+# Textos do meme
+texto_cima = st.text_input("Texto de cima:", "QUANDO O PROFESSOR")
+texto_baixo = st.text_input("Texto de baixo:", "PEDE UM TRABALHO")
 
-# Personalização
-col1, col2, col3 = st.columns(3)
-cor = col1.color_picker("Cor do texto:", "#FFFFFF")
-tamanho = col2.slider("Tamanho do texto:", 10, 100, 40)
-posicao_sup = col3.slider("Posição texto superior:", 0, 100, 10)
-posicao_inf = col3.slider("Posição texto inferior:", 0, 100, 90)
+# Cor do texto
+cor = st.color_picker("Cor do texto:", "#FFFFFF")
 
-# Gerar meme
+# Botão para criar
 if st.button("Criar Meme"):
-    # Usando uma imagem de exemplo (substitua por suas próprias imagens)
-    img = Image.new('RGB', (600, 500), color='black')
-    d = ImageDraw.Draw(img)
-    
     try:
-        # Tentando usar fonte local ou padrão
-        try:
-            fonte = ImageFont.truetype("impact.ttf", tamanho)
-        except:
-            fonte = ImageFont.load_default()
+        # Pega a imagem da internet
+        response = requests.get(imagens[opcao])
+        img = Image.open(BytesIO(response.content))
         
-        # Adicionando textos
-        d.text((50, posicao_sup), texto_superior, fill=cor, font=fonte)
-        d.text((50, img.height-posicao_inf), texto_inferior, fill=cor, font=fonte)
+        # Prepara para editar
+        draw = ImageDraw.Draw(img)
         
-        # Mostrar resultado
+        # Usa fonte básica
+        fonte = ImageFont.load_default()
+        
+        # Adiciona textos
+        draw.text((10, 10), texto_cima, fill=cor, font=fonte)
+        draw.text((10, img.height-30), texto_baixo, fill=cor, font=fonte)
+        
+        # Mostra o resultado
         st.image(img, caption="Seu Meme Pronto!")
         
-        # Botão para download
-        img.save("meme_gerado.png")
-        with open("meme_gerado.png", "rb") as file:
-            btn = st.download_button(
-                label="Baixar Meme",
-                data=file,
-                file_name="meu_meme.png",
-                mime="image/png"
-            )
-    except Exception as e:
-        st.error(f"Ocorreu um erro: {e}")
-
-# Rodapé
-st.markdown("---")
-st.caption("Projeto simples mas eficaz para demonstrar conceitos de Comunicação Digital")
+        # Prepara para download
+        img_bytes = BytesIO()
+        img.save(img_bytes, format='PNG')
+        
+        st.download_button(
+            label="Baixar Meme",
+            data=img_bytes.getvalue(),
+            file_name="meu_meme.png",
+            mime="image/png"
+        )
+    except:
+        st.error("Algo deu errado. Tente outra imagem ou texto.")
