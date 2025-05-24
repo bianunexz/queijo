@@ -1,41 +1,77 @@
-import turtle
+import streamlit as st
+from PIL import Image, ImageDraw, ImageFont
+import os
 
-# Configuração da tela
-tela = turtle.Screen()
-tela.bgcolor("white")
-tela.title("Queijo Suíço do Professor")
+# Configuração da página
+st.set_page_config(page_title="Gerador de Memes", page_icon="😂")
 
-# Configuração do desenhador (tartaruga)
-queijo = turtle.Turtle()
-queijo.speed(5)  # Velocidade média
+# Título
+st.title("📸 Gerador de Memes para Comunicação Digital")
+st.write("Crie memes rapidamente para suas campanhas!")
 
-# Desenha o queijo (retângulo amarelo)
-queijo.color("yellow")
-queijo.begin_fill()
-for _ in range(2):
-    queijo.forward(200)
-    queijo.right(90)
-    queijo.forward(150)
-    queijo.right(90)
-queijo.end_fill()
+# Sidebar com instruções
+with st.sidebar:
+    st.header("Como usar:")
+    st.write("1. Escolha uma imagem base")
+    st.write("2. Digite o texto do meme")
+    st.write("3. Ajuste a posição e cor")
+    st.write("4. Baixe seu meme pronto!")
+    st.markdown("---")
+    st.caption("Feito com ❤️ para impressionar o professor")
 
-# Desenha os buracos (círculos pretos)
-def fazer_buraco(x, y):
-    queijo.penup()
-    queijo.goto(x, y)
-    queijo.pendown()
-    queijo.color("black")
-    queijo.begin_fill()
-    queijo.circle(10)
-    queijo.end_fill()
+# Imagens de exemplo (embutidas no código)
+imagens = {
+    "Gato Surpreso": "cat.jpg",
+    "Criança Feliz": "kid.jpg",
+    "Dog Filosofo": "dog.jpg"
+}
 
-# Posições aleatórias para os buracos
-fazer_buraco(30, -20)
-fazer_buraco(80, 40)
-fazer_buraco(120, -30)
-fazer_buraco(160, 10)
-fazer_buraco(60, -60)
+# Seleção de imagem
+opcao = st.selectbox("Escolha uma imagem base:", list(imagens.keys()))
 
-# Esconde a tartaruga e finaliza
-queijo.hideturtle()
-turtle.done()
+# Texto do meme
+texto_superior = st.text_input("Texto superior:", "QUANDO O PROFESSOR")
+texto_inferior = st.text_input("Texto inferior:", "PEDE UM PROJETO INCRÍVEL")
+
+# Personalização
+col1, col2, col3 = st.columns(3)
+cor = col1.color_picker("Cor do texto:", "#FFFFFF")
+tamanho = col2.slider("Tamanho do texto:", 10, 100, 40)
+posicao_sup = col3.slider("Posição texto superior:", 0, 100, 10)
+posicao_inf = col3.slider("Posição texto inferior:", 0, 100, 90)
+
+# Gerar meme
+if st.button("Criar Meme"):
+    # Usando uma imagem de exemplo (substitua por suas próprias imagens)
+    img = Image.new('RGB', (600, 500), color='black')
+    d = ImageDraw.Draw(img)
+    
+    try:
+        # Tentando usar fonte local ou padrão
+        try:
+            fonte = ImageFont.truetype("impact.ttf", tamanho)
+        except:
+            fonte = ImageFont.load_default()
+        
+        # Adicionando textos
+        d.text((50, posicao_sup), texto_superior, fill=cor, font=fonte)
+        d.text((50, img.height-posicao_inf), texto_inferior, fill=cor, font=fonte)
+        
+        # Mostrar resultado
+        st.image(img, caption="Seu Meme Pronto!")
+        
+        # Botão para download
+        img.save("meme_gerado.png")
+        with open("meme_gerado.png", "rb") as file:
+            btn = st.download_button(
+                label="Baixar Meme",
+                data=file,
+                file_name="meu_meme.png",
+                mime="image/png"
+            )
+    except Exception as e:
+        st.error(f"Ocorreu um erro: {e}")
+
+# Rodapé
+st.markdown("---")
+st.caption("Projeto simples mas eficaz para demonstrar conceitos de Comunicação Digital")
