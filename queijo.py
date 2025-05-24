@@ -1,66 +1,59 @@
 import streamlit as st
 from PIL import Image, ImageDraw, ImageFont
+import requests
 from io import BytesIO
+import random
 
-# Título do app
-st.title("🖼️ Gerador de Memes Simples")
-
-# Opções de imagens salvas (as que você já enviou)
-imagens_salvas = {
-    "Criança com tédio": "/mnt/data/a7e444d5d84997933ae1b1a460b094d8.jpg",
-    "Cachorro Bonk": "/mnt/data/download.jpg",
-    "Gato gritando": "/mnt/data/download.jpg"  # É o mesmo nome do segundo, então sobrescreveu
+# Emoções disponíveis
+imagens_por_emocao = {
+    "Feliz": [
+        "https://i.imgur.com/h5qOeXj.jpeg",  # shiba feliz
+        "https://i.imgur.com/1n8zVqv.jpeg",  # cachorro sorrindo
+    ],
+    "Triste": [
+        "https://i.imgur.com/tVlzK6u.jpeg",  # criança entediada
+        "https://i.imgur.com/z9fjzXY.jpeg",  # gato triste
+    ],
+    "Raiva": [
+        "https://i.imgur.com/J8Vh4yF.jpeg",  # gato gritando
+        "https://i.imgur.com/0AvzAIE.jpeg",  # cachorro bravo
+    ]
 }
 
-# Opção de usar imagem salva ou fazer upload
-opcao = st.radio("Escolha uma imagem:", ["Usar imagem salva", "Enviar minha imagem"])
+# Título
+st.title("🎭 Gerador de Meme por Emoção")
 
-# Se for imagem salva
-if opcao == "Usar imagem salva":
-    escolha = st.selectbox("Escolha:", list(imagens_salvas.keys()))
-    caminho_imagem = imagens_salvas[escolha]
-    imagem = Image.open(caminho_imagem)
+# Escolha a emoção
+emocao = st.selectbox("Escolha uma emoção:", list(imagens_por_emocao.keys()))
 
-# Se for upload
-else:
-    uploaded_file = st.file_uploader("Envie sua imagem (jpg ou png)", type=["jpg", "jpeg", "png"])
-    if uploaded_file:
-        imagem = Image.open(uploaded_file)
-    else:
-        imagem = None
+# Frase do meme
+frase = st.text_input("Digite sua frase para o meme:")
 
-# Campos de texto do meme
-texto_cima = st.text_input("Texto de cima", "QUANDO O PROFESSOR")
-texto_baixo = st.text_input("Texto de baixo", "PEDE UM TRABALHO")
-cor = st.color_picker("Cor do texto", "#FFFFFF")
+# Cor do texto
+cor = st.color_picker("Cor do texto:", "#FFFFFF")
 
-# Criar Meme
+# Botão para criar o meme
 if st.button("Criar Meme"):
-    if imagem:
-        # Copia a imagem original
-        img = imagem.copy()
-        draw = ImageDraw.Draw(img)
+    # Pega imagem aleatória da emoção escolhida
+    url = random.choice(imagens_por_emocao[emocao])
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content)).convert("RGB")
 
-        # Fonte padrão (pode melhorar com .ttf depois)
-        fonte = ImageFont.load_default()
+    # Desenha texto
+    draw = ImageDraw.Draw(img)
+    fonte = ImageFont.load_default()
 
-        # Posição dos textos
-        draw.text((10, 10), texto_cima.upper(), font=fonte, fill=cor)
-        draw.text((10, img.height - 20), texto_baixo.upper(), font=fonte, fill=cor)
+    # Texto centralizado (simples)
+    largura_texto = draw.textlength(frase, font=fonte)
+    x = (img.width - largura_texto) / 2
+    y = 10
+    draw.text((x, y), frase.upper(), font=fonte, fill=cor)
 
-        # Exibe imagem
-        st.image(img, caption="Seu meme pronto!", use_column_width=True)
+    # Mostra o meme
+    st.image(img, caption="Meme Gerado!", use_column_width=True)
 
-        # Botão de download
-        img_bytes = BytesIO()
-        img.save(img_bytes, format="PNG")
-        st.download_button(
-            label="Baixar Meme",
-            data=img_bytes.getvalue(),
-            file_name="meu_meme.png",
-            mime="image/png"
-        )
-    else:
-        st.warning("Por favor, envie ou selecione uma imagem.")
-
+    # Baixar
+    img_bytes = BytesIO()
+    img.save(img_bytes, format="PNG")
+    st.download_button("Baixar Meme", data=img_bytes.getvalue(), file_name="meme.png", mime="image/png")
 
